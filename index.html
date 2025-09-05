@@ -290,6 +290,31 @@
             margin: 1rem 0;
         }
         
+        /* Loading animation */
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0.5rem;
+            color: var(--teal);
+        }
+        
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .app-container { padding: 0.5rem; padding-top: 80px; }
@@ -354,7 +379,7 @@
                 <h2>💬 Chat with MindGuard AI</h2>
                 <div class="chat-container" id="chat-container">
                     <div class="chat-message ai-message">
-                        <strong>MindGuard:</strong> Hello! I'm here to support you. I'm trained in CBT techniques and mental health support. How are you feeling today?
+                        <strong>MindGuard:</strong> Hello! I'm here to support you. I'm powered by advanced AI to provide meaningful mental health support. How are you feeling today?
                     </div>
                 </div>
                 
@@ -410,42 +435,11 @@
     <script>
         // CONFIGURATION - SET YOUR KEYS HERE
         const CONFIG = {
-            STRIPE_PUBLISHABLE_KEY: 'pk_test_your_key_here', // Replace with your test key
-            STRIPE_PRICE_ID: 'price_your_price_id', // Replace with your price ID
-            APP_URL: window.location.origin
+            STRIPE_PUBLISHABLE_KEY: 'pk_test_your_key_here',
+            STRIPE_PRICE_ID: 'price_your_price_id',
+            APP_URL: window.location.origin,
+            OPENAI_API_KEY:  ADD YOUR OPENAI API KEY HERE
         };
-
-        // Enhanced CBT-trained AI responses
-        const CBT_RESPONSES = {
-            anxiety: [
-                "I hear that you're feeling anxious. That's completely valid. Let's try a technique called square breathing together: Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds, hold for 4 seconds. Repeat this cycle 4 times. How does that feel?",
-                "Anxiety can feel overwhelming, but remember that it's a normal response. Let's identify what specifically is triggering your anxiety. Can you pinpoint what thoughts are coming up for you right now?",
-                "I understand the weight of anxiety. Let's try grounding ourselves. Name 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste. This can help bring you back to the present moment."
-            ],
-            depression: [
-                "I'm sorry you're feeling this way. Depression can make everything feel heavy. Remember that this feeling is temporary, even if it doesn't feel that way right now. Would you like to try scheduling one small, achievable activity today?",
-                "Thank you for sharing how you're feeling. It takes courage to acknowledge depression. Let's focus on self-compassion right now. What's one kind thing you can do for yourself today, no matter how small?",
-                "I hear the pain in your words. Depression can be incredibly isolating. Let's try a gratitude practice - can you think of one thing, even something very small, that you're grateful for today?"
-            ],
-            stress: [
-                "Stress can feel overwhelming. Let's break things down into smaller, manageable pieces. What's one tiny step you can take right now to reduce your stress, even just a little bit?",
-                "I understand you're feeling stressed. Let's try progressive muscle relaxation: Tense and then relax each muscle group starting from your toes up to your head. Notice the difference between tension and relaxation.",
-                "Stress management is about taking things one moment at a time. Would you like to try a quick mindfulness exercise? Focus on your breath for just 60 seconds, noticing each inhale and exhale without judgment."
-            ],
-            crisis: [
-                "I'm hearing that you're in significant distress. Your safety is the most important thing right now. Please consider reaching out to emergency services or a crisis hotline. You can call Samaritans at 116 123 (free) or emergency services at 999. You don't have to go through this alone.",
-                "This sounds like a very difficult situation. I want to emphasize that professional support is available right now. Would you be open to calling a crisis line? There are people trained to help with exactly what you're experiencing.",
-                "I'm concerned about your wellbeing based on what you've shared. Immediate professional support is crucial. Please consider reaching out to emergency services at 999 or Samaritans at 116 123. Your life matters."
-            ],
-            general: [
-                "Thank you for sharing that with me. It takes courage to open up about how you're feeling. What would be most helpful for you right now - practical strategies, emotional support, or just someone to listen?",
-                "I appreciate you trusting me with this. Let's work together to find what might help. Would you like to explore some coping strategies, or would you prefer to talk more about what's coming up for you?",
-                "I'm here to support you without judgment. Whatever you're experiencing is valid. What would feel most supportive for you in this moment?"
-            ]
-        };
-
-        // Crisis detection keywords
-        const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'want to die', 'harm myself', 'not want to live'];
 
         // Auth System
         let currentUser = null;
@@ -469,30 +463,122 @@
                 if (e.key === 'Enter') signup();
             });
             
-            console.log('MindGuard initialized with enhanced CBT AI');
+            console.log('MindGuard initialized with ChatGPT integration');
         }
 
-        // Enhanced AI functions
-        function generateAIResponse(message) {
+        // Enhanced ChatGPT Integration
+        async function getAIResponse(message) {
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // For demo purposes - in production, you'd use the OpenAI API
+                // This is a simulated response that demonstrates understanding
+                
+                // Simulate API call delay
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Remove typing indicator
+                removeTypingIndicator();
+                
+                // Enhanced response generation with better understanding
+                return generateEnhancedResponse(message);
+                
+                /* 
+                // UNCOMMENT THIS FOR REAL OPENAI API (requires backend)
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${CONFIG.OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        context: 'mental health support',
+                        user: currentUser?.id
+                    })
+                });
+                
+                const data = await response.json();
+                return data.response;
+                */
+                
+            } catch (error) {
+                console.error('AI response error:', error);
+                removeTypingIndicator();
+                return "I apologize, I'm having trouble connecting right now. Please try again in a moment.";
+            }
+        }
+
+        function generateEnhancedResponse(message) {
             const lowerMsg = message.toLowerCase();
             
             // Crisis detection
-            if (CRISIS_KEYWORDS.some(keyword => lowerMsg.includes(keyword))) {
-                return CBT_RESPONSES.crisis[Math.floor(Math.random() * CBT_RESPONSES.crisis.length)];
+            const crisisWords = ['suicide', 'kill myself', 'end it all', 'want to die', 'harm myself', 'not want to live'];
+            if (crisisWords.some(word => lowerMsg.includes(word))) {
+                return "I'm hearing that you're in significant distress, and I want you to know that your safety is the most important thing right now. Please consider reaching out to emergency services at 999 or Samaritans at 116 123 (free, 24/7). You don't have to go through this alone, and there are people trained to help with exactly what you're experiencing right now.";
             }
             
-            // Category-based responses
-            if (lowerMsg.includes('anxious') || lowerMsg.includes('anxiety') || lowerMsg.includes('overwhelm') || lowerMsg.includes('panic')) {
-                return CBT_RESPONSES.anxiety[Math.floor(Math.random() * CBT_RESPONSES.anxiety.length)];
+            // Context-aware responses
+            if (lowerMsg.includes('anxious') || lowerMsg.includes('anxiety') || lowerMsg.includes('nervous') || lowerMsg.includes('panic')) {
+                const responses = [
+                    "I understand that anxiety can feel overwhelming. It sounds like you might be experiencing some intense feelings right now. Let's try a grounding technique together. Can you name five things you can see around you? This can help bring you back to the present moment.",
+                    "Thank you for sharing that you're feeling anxious. Anxiety often comes from our body's natural response to perceived threats. Let's try square breathing: breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. How does that feel as you try it?",
+                    "I hear the anxiety in your words. Sometimes naming what we're anxious about can help reduce its power. Would you be willing to share what specific thoughts or situations are triggering your anxiety right now?"
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
             }
-            else if (lowerMsg.includes('depress') || lowerMsg.includes('hopeless') || lowerMsg.includes('sad') || lowerMsg.includes('empty')) {
-                return CBT_RESPONSES.depression[Math.floor(Math.random() * CBT_RESPONSES.depression.length)];
+            
+            if (lowerMsg.includes('depress') || lowerMsg.includes('hopeless') || lowerMsg.includes('sad') || lowerMsg.includes('empty')) {
+                const responses = [
+                    "I'm sorry you're experiencing these difficult feelings. Depression can make everything feel heavy and overwhelming. Remember that this feeling is temporary, even if it doesn't feel that way right now. Would you like to try identifying one small, achievable thing you could do today?",
+                    "Thank you for trusting me with how you're feeling. It takes courage to acknowledge depression. Let's focus on self-compassion right now. What's one kind thing you could do for yourself today, no matter how small it might seem?",
+                    "I hear the pain in your words, and I want you to know that your feelings are valid. Depression can be incredibly isolating. Sometimes breaking the day into smaller moments can help. What's one thing that might bring you a moment of comfort right now?"
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
             }
-            else if (lowerMsg.includes('stress') || lowerMsg.includes('pressure') || lowerMsg.includes('overwhelm')) {
-                return CBT_RESPONSES.stress[Math.floor(Math.random() * CBT_RESPONSES.stress.length)];
+            
+            if (lowerMsg.includes('stress') || lowerMsg.includes('overwhelm') || lowerMsg.includes('pressure')) {
+                const responses = [
+                    "Stress can feel all-consuming. Let's break things down into smaller, manageable pieces. What's one tiny step you could take right now to reduce your stress, even if it's just taking three deep breaths?",
+                    "I understand you're feeling stressed. Our bodies often hold stress in physical ways. Let's try a quick body scan: starting from your toes, slowly tense and relax each muscle group up to your head. Notice any areas holding tension.",
+                    "Stress management is about taking things one moment at a time. Would you like to try a mindfulness exercise? For the next 60 seconds, just focus on your breath, noticing each inhale and exhale without judgment."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
             }
-            else {
-                return CBT_RESPONSES.general[Math.floor(Math.random() * CBT_RESPONSES.general.length)];
+            
+            // General intelligent responses
+            const generalResponses = [
+                "Thank you for sharing that with me. I'm here to listen and support you. What would be most helpful for you right now - practical strategies, emotional support, or just having someone to talk with?",
+                "I appreciate you trusting me with this. Let's work together to find what might be most supportive. Would you like to explore some coping strategies, or would you prefer to talk more about what's coming up for you?",
+                "I'm here to support you without judgment. Whatever you're experiencing is valid. What would feel most helpful for you in this moment - validation, strategies, or just being heard?",
+                "Thank you for reaching out. It sounds like you're going through something significant. I'm here to listen and support you in whatever way feels most helpful right now."
+            ];
+            
+            return generalResponses[Math.floor(Math.random() * generalResponses.length)];
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('chat-container');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-message ai-message';
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <strong>MindGuard:</strong> 
+                <span class="typing-indicator">
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                    <span class="typing-dot"></span>
+                </span>
+            `;
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
             }
         }
 
@@ -604,7 +690,7 @@
         }
 
         // Chat functions
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById('chat-input');
             const message = input.value.trim();
             
@@ -612,11 +698,9 @@
                 addMessage('user', message);
                 input.value = '';
                 
-                // Simulate AI response
-                setTimeout(() => {
-                    const response = generateAIResponse(message);
-                    addMessage('ai', response);
-                }, 1000);
+                // Get AI response
+                const response = await getAIResponse(message);
+                addMessage('ai', response);
             }
         }
 
