@@ -1,21 +1,13 @@
 {
-  "name": "mindguard",
+  "name": "mindguard-app",
   "version": "1.0.0",
-  "description": "Mental wellbeing companion app",
-  "main": "api/index.js",
+  "description": "MindGuard - Your Companion in Mental Wellbeing",
+  "main": "index.html",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod",
-    "test": "echo \"No tests specified\" && exit 0"
+    "deploy": "vercel --prod"
   },
-  "dependencies": {
-    "stripe": "^12.0.0",
-    "twilio": "^4.0.0",
-    "@sendgrid/mail": "^7.0.0",
-    "axios": "^1.0.0",
-    "cors": "^2.8.5"
-  },
-  "keywords": ["mental-health", "wellbeing", "ai-chat"],
+  "keywords": ["mental-health", "wellbeing", "pwa"],
   "author": "MindGuard Team",
   "license": "MIT"
 }
