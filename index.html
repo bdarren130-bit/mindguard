@@ -47,6 +47,16 @@
             border: 2px solid var(--teal);
         }
         
+        .trial-notice {
+            background: var(--teal);
+            color: var(--navy);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        
         .auth-tabs {
             display: flex;
             margin-bottom: 1.5rem;
@@ -292,24 +302,28 @@
     <!-- Auth Modal -->
     <div id="auth-modal" class="auth-modal">
         <div class="auth-content">
+            <div class="trial-notice">
+                ⭐ 3-Day Free Trial • Then £10/month
+            </div>
+            
             <div class="auth-tabs">
                 <button class="auth-tab active" onclick="showTab('login')">Login</button>
                 <button class="auth-tab" onclick="showTab('signup')">Sign Up</button>
             </div>
             
             <div id="login-form" class="auth-form">
-                <input type="email" id="login-email" placeholder="Email" value="test@mindguard.com">
-                <input type="password" id="login-password" placeholder="Password" value="password123">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
                 <div id="login-error" class="auth-error"></div>
                 <button class="auth-btn" onclick="login()">Login</button>
             </div>
             
             <div id="signup-form" class="auth-form" style="display: none;">
-                <input type="text" id="signup-name" placeholder="Full Name">
-                <input type="email" id="signup-email" placeholder="Email">
-                <input type="password" id="signup-password" placeholder="Password (min 6 characters)">
+                <input type="text" id="signup-name" placeholder="Full Name" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
+                <input type="password" id="signup-password" placeholder="Password (min 6 characters)" required>
                 <div id="signup-error" class="auth-error"></div>
-                <button class="auth-btn" onclick="signup()">Create Account</button>
+                <button class="auth-btn" onclick="signup()">Start Free Trial</button>
             </div>
         </div>
     </div>
@@ -340,7 +354,7 @@
                 <h2>💬 Chat with MindGuard AI</h2>
                 <div class="chat-container" id="chat-container">
                     <div class="chat-message ai-message">
-                        <strong>MindGuard:</strong> Hello! I'm here to support you. How are you feeling today?
+                        <strong>MindGuard:</strong> Hello! I'm here to support you. I'm trained in CBT techniques and mental health support. How are you feeling today?
                     </div>
                 </div>
                 
@@ -350,9 +364,9 @@
                 </div>
                 
                 <div style="text-align: center; margin-top: 1rem;">
-                    <button class="btn" onclick="quickResponse('I\\'m feeling anxious today')">🏥 I'm anxious</button>
-                    <button class="btn" onclick="quickResponse('I need calming techniques')">🌪️ Calm me</button>
-                    <button class="btn" onclick="quickResponse('I want to journal')">📝 Journal</button>
+                    <button class="btn" onclick="quickResponse('I\\'m feeling really anxious and overwhelmed today')">🏥 I'm Anxious</button>
+                    <button class="btn" onclick="quickResponse('I\\'m feeling depressed and hopeless')">💔 I'm Depressed</button>
+                    <button class="btn" onclick="quickResponse('I need help with stress management')">💨 Stress Help</button>
                 </div>
             </div>
 
@@ -373,7 +387,7 @@
             </div>
 
             <div class="section">
-                <h2>🎓 Tools & Resources</h2>
+                <h2>🎓 CBT Tools & Resources</h2>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
                     <button class="btn" onclick="startBreathingExercise()">💨 Breathing Exercise</button>
@@ -381,6 +395,14 @@
                     <button class="btn" onclick="showGratitudePrompt()">⭐ Gratitude Journal</button>
                     <button class="btn" onclick="showMoodTracker()">📈 Mood Tracker</button>
                 </div>
+            </div>
+            
+            <!-- Safety Disclaimer -->
+            <div style="text-align: center; margin-top: 2rem; padding: 1rem; background: rgba(239, 68, 68, 0.1); border-radius: 10px;">
+                <p style="color: var(--danger); font-size: 0.9rem;">
+                    <strong>⚠️ Important:</strong> MindGuard AI provides support but is not a replacement for professional medical care. 
+                    In crisis situations, please contact emergency services immediately.
+                </p>
             </div>
         </div>
     </div>
@@ -393,35 +415,41 @@
             APP_URL: window.location.origin
         };
 
+        // Enhanced CBT-trained AI responses
+        const CBT_RESPONSES = {
+            anxiety: [
+                "I hear that you're feeling anxious. That's completely valid. Let's try a technique called square breathing together: Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds, hold for 4 seconds. Repeat this cycle 4 times. How does that feel?",
+                "Anxiety can feel overwhelming, but remember that it's a normal response. Let's identify what specifically is triggering your anxiety. Can you pinpoint what thoughts are coming up for you right now?",
+                "I understand the weight of anxiety. Let's try grounding ourselves. Name 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste. This can help bring you back to the present moment."
+            ],
+            depression: [
+                "I'm sorry you're feeling this way. Depression can make everything feel heavy. Remember that this feeling is temporary, even if it doesn't feel that way right now. Would you like to try scheduling one small, achievable activity today?",
+                "Thank you for sharing how you're feeling. It takes courage to acknowledge depression. Let's focus on self-compassion right now. What's one kind thing you can do for yourself today, no matter how small?",
+                "I hear the pain in your words. Depression can be incredibly isolating. Let's try a gratitude practice - can you think of one thing, even something very small, that you're grateful for today?"
+            ],
+            stress: [
+                "Stress can feel overwhelming. Let's break things down into smaller, manageable pieces. What's one tiny step you can take right now to reduce your stress, even just a little bit?",
+                "I understand you're feeling stressed. Let's try progressive muscle relaxation: Tense and then relax each muscle group starting from your toes up to your head. Notice the difference between tension and relaxation.",
+                "Stress management is about taking things one moment at a time. Would you like to try a quick mindfulness exercise? Focus on your breath for just 60 seconds, noticing each inhale and exhale without judgment."
+            ],
+            crisis: [
+                "I'm hearing that you're in significant distress. Your safety is the most important thing right now. Please consider reaching out to emergency services or a crisis hotline. You can call Samaritans at 116 123 (free) or emergency services at 999. You don't have to go through this alone.",
+                "This sounds like a very difficult situation. I want to emphasize that professional support is available right now. Would you be open to calling a crisis line? There are people trained to help with exactly what you're experiencing.",
+                "I'm concerned about your wellbeing based on what you've shared. Immediate professional support is crucial. Please consider reaching out to emergency services at 999 or Samaritans at 116 123. Your life matters."
+            ],
+            general: [
+                "Thank you for sharing that with me. It takes courage to open up about how you're feeling. What would be most helpful for you right now - practical strategies, emotional support, or just someone to listen?",
+                "I appreciate you trusting me with this. Let's work together to find what might help. Would you like to explore some coping strategies, or would you prefer to talk more about what's coming up for you?",
+                "I'm here to support you without judgment. Whatever you're experiencing is valid. What would feel most supportive for you in this moment?"
+            ]
+        };
+
+        // Crisis detection keywords
+        const CRISIS_KEYWORDS = ['suicide', 'kill myself', 'end it all', 'want to die', 'harm myself', 'not want to live'];
+
         // Auth System
         let currentUser = null;
         let users = JSON.parse(localStorage.getItem('mindguard_users') || '[]');
-        
-        // Pre-populate with test users if empty
-        if (users.length === 0) {
-            users = [
-                {
-                    id: '1',
-                    name: 'Test User',
-                    email: 'test@mindguard.com',
-                    password: 'password123',
-                    trialEnds: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-                    isSubscribed: false,
-                    chatHistory: []
-                },
-                {
-                    id: '2', 
-                    name: 'Admin User',
-                    email: 'admin@mindguard.com',
-                    password: 'admin123',
-                    trialEnds: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-                    isSubscribed: true,
-                    isAdmin: true,
-                    chatHistory: []
-                }
-            ];
-            localStorage.setItem('mindguard_users', JSON.stringify(users));
-        }
 
         // Initialize
         function init() {
@@ -441,7 +469,31 @@
                 if (e.key === 'Enter') signup();
             });
             
-            console.log('MindGuard initialized successfully!');
+            console.log('MindGuard initialized with enhanced CBT AI');
+        }
+
+        // Enhanced AI functions
+        function generateAIResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            // Crisis detection
+            if (CRISIS_KEYWORDS.some(keyword => lowerMsg.includes(keyword))) {
+                return CBT_RESPONSES.crisis[Math.floor(Math.random() * CBT_RESPONSES.crisis.length)];
+            }
+            
+            // Category-based responses
+            if (lowerMsg.includes('anxious') || lowerMsg.includes('anxiety') || lowerMsg.includes('overwhelm') || lowerMsg.includes('panic')) {
+                return CBT_RESPONSES.anxiety[Math.floor(Math.random() * CBT_RESPONSES.anxiety.length)];
+            }
+            else if (lowerMsg.includes('depress') || lowerMsg.includes('hopeless') || lowerMsg.includes('sad') || lowerMsg.includes('empty')) {
+                return CBT_RESPONSES.depression[Math.floor(Math.random() * CBT_RESPONSES.depression.length)];
+            }
+            else if (lowerMsg.includes('stress') || lowerMsg.includes('pressure') || lowerMsg.includes('overwhelm')) {
+                return CBT_RESPONSES.stress[Math.floor(Math.random() * CBT_RESPONSES.stress.length)];
+            }
+            else {
+                return CBT_RESPONSES.general[Math.floor(Math.random() * CBT_RESPONSES.general.length)];
+            }
         }
 
         // Auth functions
@@ -503,7 +555,7 @@
             localStorage.setItem('mindguard_current_user', JSON.stringify(newUser));
             
             showApp();
-            alert(`Welcome to MindGuard, ${name}! Your 3-day trial has started.`);
+            alert(`Welcome to MindGuard, ${name}! Your 3-day free trial has started.`);
         }
 
         function logout() {
@@ -518,6 +570,13 @@
             document.getElementById('app-content').style.display = 'none';
             document.getElementById('user-panel').style.display = 'none';
             document.getElementById('paywall').style.display = 'none';
+            
+            // Clear form fields
+            document.getElementById('login-email').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('signup-name').value = '';
+            document.getElementById('signup-email').value = '';
+            document.getElementById('signup-password').value = '';
         }
 
         function showApp() {
@@ -570,23 +629,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        function generateAIResponse(message) {
-            const lowerMsg = message.toLowerCase();
-            
-            if (lowerMsg.includes('anxious') || lowerMsg.includes('worry')) {
-                return "I understand anxiety can feel overwhelming. Let's try square breathing: Breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. Repeat 4 times.";
-            }
-            else if (lowerMsg.includes('sad') || lowerMsg.includes('depress')) {
-                return "I hear your pain. This feeling is temporary. Would you like to list three things you're grateful for today?";
-            }
-            else if (lowerMsg.includes('angry') || lowerMsg.includes('mad')) {
-                return "Anger is valid. Let's take a 5-minute timeout. Breathe deeply, then we can discuss what's bothering you.";
-            }
-            else {
-                return "Thank you for sharing. I'm here to listen and support you. How can I help you feel better today?";
-            }
-        }
-
         function quickResponse(message) {
             document.getElementById('chat-input').value = message;
             sendMessage();
@@ -600,39 +642,39 @@
 
         // Tool functions
         function startBreathingExercise() {
-            alert('💨 Square Breathing:\n\nBreathe in for 4 seconds\nHold for 4 seconds\nBreathe out for 4 seconds\nHold for 4 seconds\n\nRepeat 4 times');
+            alert('💨 Square Breathing Exercise:\n\n• Breathe in for 4 seconds\n• Hold for 4 seconds\n• Breathe out for 4 seconds\n• Hold for 4 seconds\n\nRepeat this cycle 4 times. Focus on the rhythm of your breath.');
         }
 
         function startGroundingExercise() {
-            alert('🌍 5-4-3-2-1 Grounding:\n\n5 things you can see\n4 things you can touch\n3 things you can hear\n2 things you can smell\n1 thing you can taste');
+            alert('🌍 5-4-3-2-1 Grounding Technique:\n\n• 5 things you can see\n• 4 things you can touch\n• 3 things you can hear\n• 2 things you can smell\n• 1 thing you can taste\n\nThis helps bring you back to the present moment.');
         }
 
         function showGratitudePrompt() {
-            const gratitude = prompt('What are you grateful for today?');
+            const gratitude = prompt('What is one thing you\'re grateful for today?');
             if (gratitude) {
                 addMessage('user', 'I want to practice gratitude');
                 setTimeout(() => {
-                    addMessage('ai', `That's wonderful! "${gratitude}" is something to cherish. Gratitude practice can significantly improve mental wellbeing.`);
+                    addMessage('ai', `Thank you for sharing that. "${gratitude}" is something beautiful to appreciate. Practicing gratitude regularly can significantly improve mental wellbeing.`);
                 }, 1000);
             }
         }
 
         function showMoodTracker() {
-            const mood = prompt('How are you feeling today? (1-10, where 10 is amazing)');
+            const mood = prompt('How are you feeling right now? (1-10, where 10 is amazing)');
             if (mood) {
                 addMessage('user', 'I want to track my mood');
                 setTimeout(() => {
-                    addMessage('ai', `Thank you for sharing. Your mood at ${mood}/10 is noted. Remember, it's okay to have ups and downs.`);
+                    addMessage('ai', `Thank you for checking in with yourself. Your mood at ${mood}/10 is noted. Remember that moods fluctuate, and it\'s okay to have different feelings throughout the day.`);
                 }, 1000);
             }
         }
 
         function showEmergencyModal() {
-            alert('🆘 EMERGENCY CONTACTS:\n\n📞 UK Samaritans: 116 123 (FREE)\n📞 NHS: 111 (Non-emergency)\n📞 Emergency: 999\n\nYou are not alone. Help is available 24/7.');
+            alert('🆘 EMERGENCY CONTACTS:\n\n📞 UK Samaritans: 116 123 (FREE, 24/7)\n📞 NHS: 111 (Non-emergency)\n📞 Emergency: 999\n\nYou are not alone. Professional help is available right now.');
         }
 
         function subscribe() {
-            alert('🔒 Subscription system would connect to Stripe here.\n\nIn production, this would redirect to: £10/month payment page.');
+            alert('🔒 Subscription system would connect to Stripe here.\n\nIn production, this would redirect to a secure £10/month payment page.');
         }
 
         // Initialize the app
