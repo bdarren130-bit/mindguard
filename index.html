@@ -3,31 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0B1220">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>MindGuard - Your Companion in Mental Wellbeing</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
-    <!-- iOS Meta Tags -->
-    <meta name="apple-mobile-web-app-title" content="MindGuard">
-    <link rel="apple-touch-icon" href="/icons/icon-192.png">
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Stripe.js -->
     <script src="https://js.stripe.com/v3/"></script>
-    
     <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
             --navy: #0B1220;
@@ -37,59 +16,116 @@
             --success: #10B981;
             --warning: #F59E0B;
             --danger: #EF4444;
-            --gray: #9CA3AF;
         }
         
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #0B1220 0%, #1E293B 100%);
             color: var(--cream);
-            line-height: 1.6;
             min-height: 100vh;
-            padding: 0;
-            margin: 0;
+            line-height: 1.6;
         }
         
-        /* App Container */
+        /* Auth Modal */
+        .auth-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(11, 18, 32, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .auth-content {
+            background: #1E293B;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid var(--teal);
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            background: var(--navy);
+            border: none;
+            color: var(--teal);
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .auth-tab.active {
+            background: var(--teal);
+            color: var(--navy);
+        }
+        
+        .auth-form input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid var(--slate);
+            border-radius: 10px;
+            background: var(--navy);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--teal);
+            color: var(--navy);
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .auth-error {
+            color: var(--danger);
+            margin: 0.5rem 0;
+            text-align: center;
+        }
+        
+        /* Main App */
         .app-container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 1rem;
-            padding-top: 70px; /* Space for user panel */
+            padding-top: 70px;
         }
         
-        /* Header */
         .header {
             text-align: center;
             padding: 2rem 0;
         }
         
         .logo {
-            display: inline-flex;
-            align-items: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--teal);
             margin-bottom: 1rem;
         }
         
-        .logo-svg {
-            width: 60px;
-            height: 60px;
-            margin-right: 15px;
-        }
-        
-        .logo-text {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--cream);
-        }
-        
         .tagline {
-            font-size: 1.2rem;
             color: var(--teal);
             margin-bottom: 2rem;
         }
         
-        /* Sections */
         .section {
             background: rgba(125, 211, 252, 0.1);
             backdrop-filter: blur(10px);
@@ -99,18 +135,10 @@
             margin-bottom: 2rem;
         }
         
-        .section h2 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: var(--teal);
-        }
-        
-        /* Chat Interface */
         .chat-container {
             background: rgba(247, 251, 255, 0.05);
             border-radius: 15px;
-            height: 400px;
+            height: 300px;
             overflow-y: auto;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -153,11 +181,6 @@
             color: var(--cream);
         }
         
-        .chat-input:focus {
-            outline: none;
-            border-color: var(--teal);
-        }
-        
         .send-btn {
             background: var(--teal);
             color: var(--navy);
@@ -169,7 +192,6 @@
             font-weight: 600;
         }
         
-        /* Emergency Button */
         .emergency-btn {
             background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
             color: white;
@@ -181,10 +203,8 @@
             cursor: pointer;
             margin: 1rem 0;
             width: 100%;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
         }
         
-        /* Buttons */
         .btn {
             background: var(--teal);
             color: var(--navy);
@@ -194,92 +214,10 @@
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
             margin: 0.5rem;
         }
         
-        /* Auth Modal Styles */
-        .auth-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(11, 18, 32, 0.95);
-            z-index: 10000;
-            backdrop-filter: blur(5px);
-        }
-        
-        .auth-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #1E293B;
-            padding: 2rem;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 400px;
-            border: 2px solid #7DD3FC;
-        }
-        
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 1.5rem;
-        }
-        
-        .auth-tab {
-            flex: 1;
-            padding: 1rem;
-            background: #0B1220;
-            border: none;
-            color: #7DD3FC;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .auth-tab.active {
-            background: #7DD3FC;
-            color: #0B1220;
-        }
-        
-        .auth-form input {
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 2px solid #46607A;
-            border-radius: 10px;
-            background: #0B1220;
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .auth-form input:focus {
-            outline: none;
-            border-color: #7DD3FC;
-        }
-        
-        .auth-btn {
-            width: 100%;
-            padding: 1rem;
-            background: #7DD3FC;
-            color: #0B1220;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .auth-error {
-            color: #EF4444;
-            margin: 0.5rem 0;
-            text-align: center;
-        }
-        
-        /* User Info Panel */
+        /* User Panel */
         .user-panel {
             position: fixed;
             top: 10px;
@@ -288,7 +226,7 @@
             color: white;
             padding: 1rem;
             border-radius: 10px;
-            z-index: 9999;
+            z-index: 999;
             font-size: 12px;
             max-width: 250px;
         }
@@ -296,11 +234,11 @@
         .user-email {
             font-weight: 600;
             margin-bottom: 0.5rem;
-            color: #7DD3FC;
+            color: var(--teal);
         }
         
         .user-status {
-            background: #10B981;
+            background: var(--success);
             color: white;
             padding: 0.3rem 0.6rem;
             border-radius: 3px;
@@ -308,24 +246,8 @@
             margin-bottom: 0.5rem;
         }
         
-        .user-status.trial { background: #3B82F6; }
-        .user-status.subscribed { background: #8B5CF6; }
-        .user-status.expired { background: #EF4444; }
-        
-        .admin-btn {
-            background: #F59E0B;
-            color: white;
-            border: none;
-            padding: 0.3rem 0.6rem;
-            border-radius: 3px;
-            margin: 0.2rem 0;
-            cursor: pointer;
-            font-size: 10px;
-            width: 100%;
-        }
-        
         .logout-btn {
-            background: #EF4444;
+            background: var(--danger);
             color: white;
             border: none;
             padding: 0.3rem 0.6rem;
@@ -338,57 +260,12 @@
         
         /* Paywall */
         .paywall {
-            display: none;
             text-align: center;
             padding: 2rem;
             background: white;
-            color: #0B1220;
+            color: var(--navy);
             border-radius: 15px;
             margin: 2rem 0;
-        }
-        
-        /* Social Sharing Styles */
-        .social-sharing {
-            text-align: center;
-            padding: 2rem;
-            background: rgba(125, 211, 252, 0.1);
-            border-radius: 15px;
-            margin: 2rem 0;
-        }
-        
-        .share-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .share-btn {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s ease;
-        }
-        
-        .share-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .share-btn.facebook { background: #1877F2; color: white; }
-        .share-btn.twitter { background: #1DA1F2; color: white; }
-        .share-btn.linkedin { background: #0077B5; color: white; }
-        .share-btn.whatsapp { background: #25D366; color: white; }
-        
-        /* Payment Processing */
-        .payment-processing {
-            text-align: center;
-            padding: 2rem;
         }
         
         .stripe-btn {
@@ -403,99 +280,11 @@
             margin: 1rem 0;
         }
         
-        /* Enhanced AI Response Styles */
-        .ai-suggestions {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(125, 211, 252, 0.1);
-            border-radius: 10px;
-            border-left: 4px solid #7DD3FC;
-        }
-        
-        .suggestion-btn {
-            background: rgba(125, 211, 252, 0.2);
-            color: #7DD3FC;
-            border: 1px solid #7DD3FC;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin: 0.5rem 0.5rem 0.5rem 0;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        .crisis-alert {
-            background: rgba(239, 68, 68, 0.2);
-            border: 2px solid #EF4444;
-            border-radius: 10px;
-            padding: 1rem;
-            margin: 1rem 0;
-            text-align: center;
-        }
-        
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .app-container {
-                padding: 0.5rem;
-                padding-top: 80px;
-            }
-            
-            .logo-text {
-                font-size: 2rem;
-            }
-            
-            .section {
-                padding: 1.5rem;
-            }
-            
-            .chat-container {
-                height: 300px;
-            }
-            
-            .user-panel {
-                top: 5px;
-                right: 5px;
-                left: 5px;
-                max-width: none;
-            }
-            
-            .share-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-        
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
-        }
-        
-        /* Loading animation */
-        .typing-indicator {
-            display: inline-block;
-            position: relative;
-        }
-        
-        .typing-indicator span {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--teal);
-            margin: 0 2px;
-            animation: typing 1.4s infinite;
-        }
-        
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
+            .app-container { padding: 0.5rem; padding-top: 80px; }
+            .chat-container { height: 250px; }
+            .user-panel { top: 5px; right: 5px; left: 5px; max-width: none; }
         }
     </style>
 </head>
@@ -508,31 +297,27 @@
                 <button class="auth-tab" onclick="showTab('signup')">Sign Up</button>
             </div>
             
-            <!-- Login Form -->
             <div id="login-form" class="auth-form">
-                <input type="email" id="login-email" placeholder="Email" required>
-                <input type="password" id="login-password" placeholder="Password" required>
+                <input type="email" id="login-email" placeholder="Email" value="test@mindguard.com">
+                <input type="password" id="login-password" placeholder="Password" value="password123">
                 <div id="login-error" class="auth-error"></div>
                 <button class="auth-btn" onclick="login()">Login</button>
             </div>
             
-            <!-- Signup Form -->
             <div id="signup-form" class="auth-form" style="display: none;">
-                <input type="text" id="signup-name" placeholder="Full Name" required>
-                <input type="email" id="signup-email" placeholder="Email" required>
-                <input type="password" id="signup-password" placeholder="Password (min 6 characters)" required>
+                <input type="text" id="signup-name" placeholder="Full Name">
+                <input type="email" id="signup-email" placeholder="Email">
+                <input type="password" id="signup-password" placeholder="Password (min 6 characters)">
                 <div id="signup-error" class="auth-error"></div>
                 <button class="auth-btn" onclick="signup()">Create Account</button>
             </div>
         </div>
     </div>
 
-    <!-- User Info Panel -->
+    <!-- User Panel -->
     <div id="user-panel" class="user-panel" style="display: none;">
         <div class="user-email" id="user-email"></div>
-        <div class="user-status" id="user-status"></div>
-        <div id="trial-info"></div>
-        <button class="admin-btn" onclick="toggleAdminMode()" id="admin-toggle">Enable Admin Mode</button>
+        <div class="user-status" id="user-status">TRIAL ACTIVE</div>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 
@@ -541,55 +326,17 @@
         <h2>🔒 Subscription Required</h2>
         <p>Your free trial has ended. Subscribe to continue using MindGuard.</p>
         <button class="stripe-btn" onclick="subscribe()">Subscribe Now - £10/month</button>
-        <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
-            Secure payment processing with Stripe
-        </p>
     </div>
 
-    <!-- Social Sharing Section -->
-    <div class="social-sharing" id="social-sharing" style="display: none;">
-        <h2>✨ Help Others Find Support</h2>
-        <p>Share MindGuard with friends who might benefit from mental health support. Together we can make a difference.</p>
-        
-        <div class="share-buttons">
-            <button class="share-btn facebook" onclick="shareOnFacebook()">
-                👥 Facebook
-            </button>
-            <button class="share-btn twitter" onclick="shareOnTwitter()">
-                🐦 Twitter
-            </button>
-            <button class="share-btn linkedin" onclick="shareOnLinkedIn()">
-                💼 LinkedIn
-            </button>
-            <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
-                📱 WhatsApp
-            </button>
-        </div>
-        
-        <p style="margin-top: 1rem; font-size: 0.9rem; color: #7DD3FC;">
-            #MentalHealth #Wellbeing #MindGuard #YouAreNotAlone
-        </p>
-    </div>
-
-    <!-- Main App Content -->
+    <!-- Main App -->
     <div id="app-content" style="display: none;">
         <div class="app-container">
-            <!-- Header -->
-            <div class="header fade-in">
-                <div class="logo">
-                    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="45" fill="#7DD3FC" />
-                        <path d="M35 35 Q50 20 65 35" stroke="#0B1220" stroke-width="4" fill="none" />
-                        <path d="M30 50 Q50 65 70 50" stroke="#0B1220" stroke-width="4" fill="none" />
-                        <path d="M25 65 Q50 85 75 65" stroke="#0B1220" stroke-width="4" fill="none" />
-                    </svg>
-                    <span class="logo-text">MindGuard</span>
-                </div>
+            <div class="header">
+                <div class="logo">MindGuard</div>
                 <p class="tagline">Your Companion in Mental Wellbeing</p>
             </div>
 
-            <!-- Chat Interface -->
-            <div class="section fade-in">
+            <div class="section">
                 <h2>💬 Chat with MindGuard AI</h2>
                 <div class="chat-container" id="chat-container">
                     <div class="chat-message ai-message">
@@ -609,8 +356,7 @@
                 </div>
             </div>
 
-            <!-- Emergency Section -->
-            <div class="section fade-in">
+            <div class="section">
                 <h2>🆘 Emergency Assistance</h2>
                 <p>Your safety is our priority. Immediate help is available when you need it most.</p>
                 
@@ -626,8 +372,7 @@
                 </div>
             </div>
 
-            <!-- Tools & Resources -->
-            <div class="section fade-in">
+            <div class="section">
                 <h2>🎓 Tools & Resources</h2>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
@@ -641,389 +386,257 @@
     </div>
 
     <script>
-        // Enhanced Configuration
+        // CONFIGURATION - SET YOUR KEYS HERE
         const CONFIG = {
-            STRIPE_PUBLISHABLE_KEY: 'pk_test_your_publishable_key_here', // REPLACE WITH YOUR KEY
-            STRIPE_PRICE_ID: 'price_your_price_id_here', // REPLACE WITH YOUR PRICE ID
-            APP_URL: 'https://your-app.vercel.app', // REPLACE WITH YOUR URL
-            SHARE_TEXT: 'Discover MindGuard - Your compassionate AI companion for mental wellbeing. 24/7 support, crisis resources, and personalized mental health tools. #MentalHealth #Wellbeing #MindGuard',
-            HASHTAGS: ['MentalHealth', 'Wellbeing', 'MindGuard', 'YouAreNotAlone']
+            STRIPE_PUBLISHABLE_KEY: 'pk_test_your_key_here', // Replace with your test key
+            STRIPE_PRICE_ID: 'price_your_price_id', // Replace with your price ID
+            APP_URL: window.location.origin
         };
 
-        // Enhanced AuthSystem with Stripe integration
-        class AuthSystem {
-            constructor() {
-                this.currentUser = null;
-                this.users = this.loadUsers();
-                this.adminMode = false;
-                this.adminUsers = ['admin@mindguard.com', 'tester@mindguard.com'];
-                this.stripe = null;
-                
-                this.initialize();
-            }
-
-            initialize() {
-                this.initStripe();
-                this.checkAutoLogin();
-                this.setupEventListeners();
-            }
-
-            initStripe() {
-                if (typeof Stripe !== 'undefined') {
-                    this.stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
-                    console.log('Stripe initialized successfully');
-                } else {
-                    console.error('Stripe.js not loaded');
-                }
-            }
-
-            async createSubscription() {
-                if (!this.stripe) {
-                    this.showNotification('Payment system not ready. Please try again.');
-                    return;
-                }
-
-                try {
-                    // Create checkout session
-                    const response = await fetch('/api/create-checkout-session', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            priceId: CONFIG.STRIPE_PRICE_ID,
-                            customerEmail: this.currentUser.email,
-                            userId: this.currentUser.id
-                        })
-                    });
-
-                    const session = await response.json();
-
-                    // Redirect to Stripe Checkout
-                    const result = await this.stripe.redirectToCheckout({
-                        sessionId: session.id
-                    });
-
-                    if (result.error) {
-                        this.showNotification('Payment failed: ' + result.error.message);
-                    }
-                } catch (error) {
-                    console.error('Subscription error:', error);
-                    this.showNotification('Subscription processing failed. Please try again.');
-                }
-            }
-
-            loadUsers() {
-                const saved = localStorage.getItem('mindguard_users');
-                return saved ? JSON.parse(saved) : [];
-            }
-
-            saveUsers() {
-                localStorage.setItem('mindguard_users', JSON.stringify(this.users));
-            }
-
-            checkAutoLogin() {
-                const savedUser = localStorage.getItem('mindguard_current_user');
-                if (savedUser) {
-                    this.currentUser = JSON.parse(savedUser);
-                    this.showUserPanel();
-                    this.hideAuthModal();
-                    this.checkAccess();
-                } else {
-                    this.showAuthModal();
-                }
-            }
-
-            setupEventListeners() {
-                ['login-password', 'signup-password'].forEach(id => {
-                    document.getElementById(id)?.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') this[id.includes('login') ? 'login' : 'signup']();
-                    });
-                });
-            }
-
-            showAuthModal() {
-                document.getElementById('auth-modal').style.display = 'block';
-                document.getElementById('app-content').style.display = 'none';
-            }
-
-            hideAuthModal() {
-                document.getElementById('auth-modal').style.display = 'none';
-            }
-
-            showTab(tabName) {
-                document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
-                document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
-                
-                document.querySelector(`.auth-tab:nth-child(${tabName === 'login' ? '1' : '2'})`).classList.add('active');
-                document.getElementById(`${tabName}-form`).style.display = 'block';
-                
-                document.getElementById(`${tabName}-error`).textContent = '';
-            }
-
-            login() {
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                const user = this.users.find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    this.currentUser = user;
-                    localStorage.setItem('mindguard_current_user', JSON.stringify(user));
-                    this.showUserPanel();
-                    this.hideAuthModal();
-                    this.checkAccess();
-                    this.showNotification(`Welcome back, ${user.name}!`);
-                } else {
-                    document.getElementById('login-error').textContent = 'Invalid email or password';
-                }
-            }
-
-            signup() {
-                const name = document.getElementById('signup-name').value;
-                const email = document.getElementById('signup-email').value;
-                const password = document.getElementById('signup-password').value;
-                
-                if (password.length < 6) {
-                    document.getElementById('signup-error').textContent = 'Password must be at least 6 characters';
-                    return;
-                }
-                
-                if (this.users.find(u => u.email === email)) {
-                    document.getElementById('signup-error').textContent = 'Email already registered';
-                    return;
-                }
-                
-                const newUser = {
-                    id: Date.now().toString(),
-                    name,
-                    email,
-                    password,
-                    createdAt: new Date().toISOString(),
+        // Auth System
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('mindguard_users') || '[]');
+        
+        // Pre-populate with test users if empty
+        if (users.length === 0) {
+            users = [
+                {
+                    id: '1',
+                    name: 'Test User',
+                    email: 'test@mindguard.com',
+                    password: 'password123',
                     trialEnds: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
                     isSubscribed: false,
-                    isAdmin: this.adminUsers.includes(email),
                     chatHistory: []
-                };
-                
-                this.users.push(newUser);
-                this.saveUsers();
-                
-                this.currentUser = newUser;
-                localStorage.setItem('mindguard_current_user', JSON.stringify(newUser));
-                
-                this.showUserPanel();
-                this.hideAuthModal();
-                this.checkAccess();
-                this.showNotification(`Welcome to MindGuard, ${name}! Your 3-day trial has started.`);
-            }
-
-            logout() {
-                this.currentUser = null;
-                localStorage.removeItem('mindguard_current_user');
-                this.showAuthModal();
-                this.hideUserPanel();
-                this.adminMode = false;
-                document.getElementById('app-content').style.display = 'none';
-                this.showNotification('Logged out successfully');
-            }
-
-            showUserPanel() {
-                const panel = document.getElementById('user-panel');
-                const emailEl = document.getElementById('user-email');
-                const statusEl = document.getElementById('user-status');
-                const trialInfoEl = document.getElementById('trial-info');
-                const adminToggle = document.getElementById('admin-toggle');
-                
-                panel.style.display = 'block';
-                emailEl.textContent = this.currentUser.email;
-                
-                const trialEnd = new Date(this.currentUser.trialEnds);
-                const now = new Date();
-                const isTrialActive = now < trialEnd;
-                
-                if (this.currentUser.isAdmin && this.adminMode) {
-                    statusEl.textContent = 'ADMIN MODE';
-                    statusEl.className = 'user-status subscribed';
-                    trialInfoEl.innerHTML = '<div style="color: #F59E0B; font-size: 10px;">Full access granted</div>';
-                    adminToggle.textContent = 'Disable Admin Mode';
-                } else if (this.currentUser.isSubscribed) {
-                    statusEl.textContent = 'SUBSCRIBED';
-                    statusEl.className = 'user-status subscribed';
-                    trialInfoEl.innerHTML = '';
-                    adminToggle.style.display = this.currentUser.isAdmin ? 'block' : 'none';
-                } else if (isTrialActive) {
-                    const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
-                    statusEl.textContent = `TRIAL: ${daysLeft}D LEFT`;
-                    statusEl.className = 'user-status trial';
-                    trialInfoEl.innerHTML = `<div style="color: #7DD3FC; font-size: 10px;">Free trial active</div>`;
-                    adminToggle.style.display = this.currentUser.isAdmin ? 'block' : 'none';
-                } else {
-                    statusEl.textContent = 'TRIAL EXPIRED';
-                    statusEl.className = 'user-status expired';
-                    trialInfoEl.innerHTML = '<div style="color: #EF4444; font-size: 10px;">Subscription required</div>';
-                    adminToggle.style.display = this.currentUser.isAdmin ? 'block' : 'none';
+                },
+                {
+                    id: '2', 
+                    name: 'Admin User',
+                    email: 'admin@mindguard.com',
+                    password: 'admin123',
+                    trialEnds: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+                    isSubscribed: true,
+                    isAdmin: true,
+                    chatHistory: []
                 }
-            }
+            ];
+            localStorage.setItem('mindguard_users', JSON.stringify(users));
+        }
 
-            hideUserPanel() {
-                document.getElementById('user-panel').style.display = 'none';
+        // Initialize
+        function init() {
+            const savedUser = localStorage.getItem('mindguard_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+            } else {
+                showAuth();
             }
+            
+            // Setup event listeners
+            document.getElementById('login-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') login();
+            });
+            document.getElementById('signup-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') signup();
+            });
+            
+            console.log('MindGuard initialized successfully!');
+        }
 
-            toggleAdminMode() {
-                if (!this.currentUser.isAdmin) return;
-                
-                this.adminMode = !this.adminMode;
-                this.showUserPanel();
-                this.checkAccess();
-                
-                this.showNotification(this.adminMode ? 
-                    'Admin mode enabled - full access granted' : 
-                    'Admin mode disabled'
-                );
-            }
+        // Auth functions
+        function showTab(tabName) {
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
+            
+            document.querySelector(`.auth-tab:nth-child(${tabName === 'login' ? '1' : '2'})`).classList.add('active');
+            document.getElementById(`${tabName}-form`).style.display = 'block';
+            
+            document.getElementById(`${tabName}-error`).textContent = '';
+        }
 
-            checkAccess() {
-                const hasAccess = this.hasAccess();
-                
-                if (hasAccess) {
-                    document.getElementById('app-content').style.display = 'block';
-                    document.getElementById('paywall').style.display = 'none';
-                    this.checkAndShowSharing();
-                } else {
-                    document.getElementById('app-content').style.display = 'none';
-                    document.getElementById('paywall').style.display = 'block';
-                    document.getElementById('social-sharing').style.display = 'none';
-                }
-                
-                return hasAccess;
-            }
-
-            hasAccess() {
-                if (!this.currentUser) return false;
-                if (this.currentUser.isAdmin && this.adminMode) return true;
-                
-                const trialEnd = new Date(this.currentUser.trialEnds);
-                const now = new Date();
-                
-                return this.currentUser.isSubscribed || now < trialEnd;
-            }
-
-            checkAndShowSharing() {
-                if (this.currentUser && this.currentUser.isSubscribed) {
-                    document.getElementById('social-sharing').style.display = 'block';
-                } else {
-                    document.getElementById('social-sharing').style.display = 'none';
-                }
-            }
-
-            showNotification(message) {
-                // Simple notification - replace with your system
-                console.log('Notification:', message);
-                if (typeof alert === 'function') alert(message);
-            }
-
-            // Admin functions
-            getAllUsers() {
-                return this.users;
-            }
-
-            grantSubscription(userId) {
-                const user = this.users.find(u => u.id === userId);
-                if (user) {
-                    user.isSubscribed = true;
-                    this.saveUsers();
-                    return true;
-                }
-                return false;
-            }
-
-            resetTrial(userId) {
-                const user = this.users.find(u => u.id === userId);
-                if (user) {
-                    user.trialEnds = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
-                    user.isSubscribed = false;
-                    this.saveUsers();
-                    return true;
-                }
-                return false;
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('mindguard_current_user', JSON.stringify(user));
+                showApp();
+                alert(`Welcome back, ${user.name}!`);
+            } else {
+                document.getElementById('login-error').textContent = 'Invalid email or password';
             }
         }
 
-        // Enhanced ChatSystem with CBT AI
-        class ChatSystem {
-            constructor() {
-                this.authSystem = authSystem;
-                this.cbtTechniques = this.loadCBTTechniques();
+        function signup() {
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            if (password.length < 6) {
+                document.getElementById('signup-error').textContent = 'Password must be at least 6 characters';
+                return;
             }
-
-            loadCBTTechniques() {
-                return {
-                    'anxiety': [
-                        'Let\\'s try the 5-4-3-2-1 grounding technique. Name 5 things you can see, 4 things you can touch, 3 things you can hear, 2 things you can smell, and 1 thing you can taste.',
-                        'Practice square breathing: Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds, hold for 4 seconds. Repeat 4 times.',
-                        'Challenge anxious thoughts: What\\'s the evidence for this thought? What\\'s a more balanced perspective?'
-                    ],
-                    'depression': [
-                        'Let\\'s schedule one small positive activity today. What\\'s one thing you can do that usually brings you slight pleasure?',
-                        'Practice gratitude: List three things you\\'re grateful for today, no matter how small.',
-                        'Remember: This feeling is temporary. Let\\'s break the day into manageable chunks.'
-                    ],
-                    'stress': [
-                        'Try progressive muscle relaxation: Tense and relax each muscle group from toes to head.',
-                        'Break tasks into smaller steps. What\\'s one tiny step you can take right now?',
-                        'Practice mindfulness: Focus on your breath for 60 seconds without judgment.'
-                    ],
-                    'anger': [
-                        'Take a timeout. Step away for 5 minutes and practice deep breathing.',
-                        'Use \"I feel\" statements instead of \"You make me\" statements.',
-                        'Channel the energy physically: go for a walk, do jumping jacks, or squeeze a stress ball.'
-                    ]
-                };
+            
+            if (users.find(u => u.email === email)) {
+                document.getElementById('signup-error').textContent = 'Email already registered';
+                return;
             }
+            
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                trialEnds: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+                isSubscribed: false,
+                chatHistory: []
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('mindguard_users', JSON.stringify(users));
+            
+            currentUser = newUser;
+            localStorage.setItem('mindguard_current_user', JSON.stringify(newUser));
+            
+            showApp();
+            alert(`Welcome to MindGuard, ${name}! Your 3-day trial has started.`);
+        }
 
-            sendMessage() {
-                if (!this.authSystem.hasAccess()) {
-                    this.showNotification('Please subscribe to continue chatting');
-                    return;
-                }
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('mindguard_current_user');
+            showAuth();
+            alert('Logged out successfully');
+        }
 
-                const input = document.getElementById('chat-input');
-                const message = input.value.trim();
+        function showAuth() {
+            document.getElementById('auth-modal').style.display = 'flex';
+            document.getElementById('app-content').style.display = 'none';
+            document.getElementById('user-panel').style.display = 'none';
+            document.getElementById('paywall').style.display = 'none';
+        }
+
+        function showApp() {
+            document.getElementById('auth-modal').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+            document.getElementById('user-panel').style.display = 'block';
+            
+            // Update user panel
+            document.getElementById('user-email').textContent = currentUser.email;
+            
+            // Check access
+            checkAccess();
+        }
+
+        function checkAccess() {
+            const trialEnd = new Date(currentUser.trialEnds);
+            const now = new Date();
+            const hasAccess = currentUser.isSubscribed || now < trialEnd;
+            
+            if (hasAccess) {
+                document.getElementById('paywall').style.display = 'none';
+            } else {
+                document.getElementById('paywall').style.display = 'block';
+            }
+        }
+
+        // Chat functions
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage('user', message);
+                input.value = '';
                 
-                if (message) {
-                    this.addMessage('user', message);
-                    input.value = '';
-                    
-                    this.showTypingIndicator();
-                    
-                    setTimeout(() => {
-                        this.removeTypingIndicator();
-                        const aiResponse = this.generateAIResponse(message);
-                        this.addMessage('ai', aiResponse.text);
-                        
-                        // Show suggestions if available
-                        if (aiResponse.suggestions && aiResponse.suggestions.length > 0) {
-                            this.showSuggestions(aiResponse.suggestions);
-                        }
-                        
-                        // Show crisis alert if detected
-                        if (aiResponse.isCrisis) {
-                            this.showCrisisAlert();
-                        }
-                        
-                        this.saveChatHistory();
-                    }, 1500);
-                }
+                // Simulate AI response
+                setTimeout(() => {
+                    const response = generateAIResponse(message);
+                    addMessage('ai', response);
+                }, 1000);
             }
+        }
 
-            addMessage(sender, text) {
-                const container = document.getElementById('chat-container');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `chat-message ${sender}-message`;
-                messageDiv.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindGuard'}:</strong> ${text}`;
-                container.appendChild(messageDiv);
-                container.scrollTop = container.scrollHeight;
-                
-                // Save to user's chat history
-                if (
+        function addMessage(sender, text) {
+            const container = document.getElementById('chat-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            messageDiv.innerHTML = `<strong>${sender === 'user' ? 'You' : 'MindGuard'}:</strong> ${text}`;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function generateAIResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            if (lowerMsg.includes('anxious') || lowerMsg.includes('worry')) {
+                return "I understand anxiety can feel overwhelming. Let's try square breathing: Breathe in for 4 seconds, hold for 4, breathe out for 4, hold for 4. Repeat 4 times.";
+            }
+            else if (lowerMsg.includes('sad') || lowerMsg.includes('depress')) {
+                return "I hear your pain. This feeling is temporary. Would you like to list three things you're grateful for today?";
+            }
+            else if (lowerMsg.includes('angry') || lowerMsg.includes('mad')) {
+                return "Anger is valid. Let's take a 5-minute timeout. Breathe deeply, then we can discuss what's bothering you.";
+            }
+            else {
+                return "Thank you for sharing. I'm here to listen and support you. How can I help you feel better today?";
+            }
+        }
+
+        function quickResponse(message) {
+            document.getElementById('chat-input').value = message;
+            sendMessage();
+        }
+
+        function handleChatInput(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Tool functions
+        function startBreathingExercise() {
+            alert('💨 Square Breathing:\n\nBreathe in for 4 seconds\nHold for 4 seconds\nBreathe out for 4 seconds\nHold for 4 seconds\n\nRepeat 4 times');
+        }
+
+        function startGroundingExercise() {
+            alert('🌍 5-4-3-2-1 Grounding:\n\n5 things you can see\n4 things you can touch\n3 things you can hear\n2 things you can smell\n1 thing you can taste');
+        }
+
+        function showGratitudePrompt() {
+            const gratitude = prompt('What are you grateful for today?');
+            if (gratitude) {
+                addMessage('user', 'I want to practice gratitude');
+                setTimeout(() => {
+                    addMessage('ai', `That's wonderful! "${gratitude}" is something to cherish. Gratitude practice can significantly improve mental wellbeing.`);
+                }, 1000);
+            }
+        }
+
+        function showMoodTracker() {
+            const mood = prompt('How are you feeling today? (1-10, where 10 is amazing)');
+            if (mood) {
+                addMessage('user', 'I want to track my mood');
+                setTimeout(() => {
+                    addMessage('ai', `Thank you for sharing. Your mood at ${mood}/10 is noted. Remember, it's okay to have ups and downs.`);
+                }, 1000);
+            }
+        }
+
+        function showEmergencyModal() {
+            alert('🆘 EMERGENCY CONTACTS:\n\n📞 UK Samaritans: 116 123 (FREE)\n📞 NHS: 111 (Non-emergency)\n📞 Emergency: 999\n\nYou are not alone. Help is available 24/7.');
+        }
+
+        function subscribe() {
+            alert('🔒 Subscription system would connect to Stripe here.\n\nIn production, this would redirect to: £10/month payment page.');
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
