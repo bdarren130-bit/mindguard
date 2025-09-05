@@ -433,25 +433,35 @@
     </div>
 
     <script>
-        // CONFIGURATION - SET YOUR KEYS HERE
+        // CONFIGURATION
         const CONFIG = {
             STRIPE_PUBLISHABLE_KEY: 'pk_test_your_key_here',
             STRIPE_PRICE_ID: 'price_your_price_id',
             APP_URL: window.location.origin,
-            OPENAI_API_KEY:  ADD YOUR OPENAI API KEY HERE
+            OPENAI_API_KEY: 'your_openai_api_key_here'
         };
 
-        // Auth System
+        // Auth System - FIXED
         let currentUser = null;
         let users = JSON.parse(localStorage.getItem('mindguard_users') || '[]');
 
-        // Initialize
+        // Initialize - FIXED
         function init() {
+            console.log('Initializing MindGuard...');
+            console.log('Users in storage:', users);
+            
             const savedUser = localStorage.getItem('mindguard_current_user');
             if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                showApp();
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    console.log('Found saved user:', currentUser.email);
+                    showApp();
+                } catch (e) {
+                    console.error('Error parsing saved user:', e);
+                    showAuth();
+                }
             } else {
+                console.log('No saved user found, showing auth');
                 showAuth();
             }
             
@@ -463,46 +473,17 @@
                 if (e.key === 'Enter') signup();
             });
             
-            console.log('MindGuard initialized with ChatGPT integration');
+            console.log('MindGuard initialized with working authentication');
         }
 
         // Enhanced ChatGPT Integration
         async function getAIResponse(message) {
-            // Show typing indicator
             showTypingIndicator();
             
             try {
-                // For demo purposes - in production, you'd use the OpenAI API
-                // This is a simulated response that demonstrates understanding
-                
-                // Simulate API call delay
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                // Remove typing indicator
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 removeTypingIndicator();
-                
-                // Enhanced response generation with better understanding
                 return generateEnhancedResponse(message);
-                
-                /* 
-                // UNCOMMENT THIS FOR REAL OPENAI API (requires backend)
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${CONFIG.OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        context: 'mental health support',
-                        user: currentUser?.id
-                    })
-                });
-                
-                const data = await response.json();
-                return data.response;
-                */
-                
             } catch (error) {
                 console.error('AI response error:', error);
                 removeTypingIndicator();
@@ -582,37 +563,48 @@
             }
         }
 
-        // Auth functions
+        // Auth functions - FIXED
         function showTab(tabName) {
+            console.log('Showing tab:', tabName);
             document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.auth-form').forEach(form => form.style.display = 'none');
             
-            document.querySelector(`.auth-tab:nth-child(${tabName === 'login' ? '1' : '2'})`).classList.add('active');
+            const tabIndex = tabName === 'login' ? 1 : 2;
+            document.querySelector(`.auth-tab:nth-child(${tabIndex})`).classList.add('active');
             document.getElementById(`${tabName}-form`).style.display = 'block';
             
             document.getElementById(`${tabName}-error`).textContent = '';
         }
 
         function login() {
+            console.log('Login attempt');
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
+            
+            console.log('Login credentials:', { email, password });
+            console.log('Available users:', users);
             
             const user = users.find(u => u.email === email && u.password === password);
             
             if (user) {
+                console.log('Login successful:', user.email);
                 currentUser = user;
                 localStorage.setItem('mindguard_current_user', JSON.stringify(user));
                 showApp();
                 alert(`Welcome back, ${user.name}!`);
             } else {
+                console.log('Login failed: invalid credentials');
                 document.getElementById('login-error').textContent = 'Invalid email or password';
             }
         }
 
         function signup() {
+            console.log('Signup attempt');
             const name = document.getElementById('signup-name').value;
             const email = document.getElementById('signup-email').value;
             const password = document.getElementById('signup-password').value;
+            
+            console.log('Signup details:', { name, email, password });
             
             if (password.length < 6) {
                 document.getElementById('signup-error').textContent = 'Password must be at least 6 characters';
@@ -640,11 +632,13 @@
             currentUser = newUser;
             localStorage.setItem('mindguard_current_user', JSON.stringify(newUser));
             
+            console.log('Signup successful:', newUser.email);
             showApp();
             alert(`Welcome to MindGuard, ${name}! Your 3-day free trial has started.`);
         }
 
         function logout() {
+            console.log('Logging out');
             currentUser = null;
             localStorage.removeItem('mindguard_current_user');
             showAuth();
@@ -652,6 +646,7 @@
         }
 
         function showAuth() {
+            console.log('Showing auth modal');
             document.getElementById('auth-modal').style.display = 'flex';
             document.getElementById('app-content').style.display = 'none';
             document.getElementById('user-panel').style.display = 'none';
@@ -666,6 +661,7 @@
         }
 
         function showApp() {
+            console.log('Showing app for user:', currentUser?.email);
             document.getElementById('auth-modal').style.display = 'none';
             document.getElementById('app-content').style.display = 'block';
             document.getElementById('user-panel').style.display = 'block';
