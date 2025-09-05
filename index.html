@@ -1,0 +1,238 @@
+### 5. public/index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindGuard - Your Companion in Mental Wellbeing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0B1220;
+            --teal: #7DD3FC;
+            --slate: #46607A;
+            --cream: #F7FBFF;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+      
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+      
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--navy);
+            color: var(--cream);
+            line-height: 1.6;
+        }
+      
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+      
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+      
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+      
+        .logo-svg {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+      
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--cream);
+        }
+      
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--teal);
+            margin-bottom: 2rem;
+        }
+      
+        .section {
+            background-color: var(--teal);
+            color: var(--navy);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+      
+        .section h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--navy);
+        }
+      
+        .subscription-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+      
+        .plan-card {
+            background-color: var(--cream);
+            color: var(--navy);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+      
+        .plan-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--slate);
+            margin: 1rem 0;
+        }
+      
+        .btn {
+            background-color: var(--slate);
+            color: var(--cream);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+      
+        .btn:hover {
+            background-color: var(--navy);
+        }
+      
+        .btn-success {
+            background-color: var(--success);
+        }
+      
+        .btn-danger {
+            background-color: var(--danger);
+        }
+      
+        .emergency-btn {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+        }
+      
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+          
+            .subscription-plans {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#7DD3FC" />
+                    <path d="M35 35 Q50 20 65 35" stroke="#0B1220" stroke-width="4" fill="none" />
+                    <path d="M30 50 Q50 65 70 50" stroke="#0B1220" stroke-width="4" fill="none" />
+                    <path d="M25 65 Q50 85 75 65" stroke="#0B1220" stroke-width="4" fill="none" />
+                </svg>
+                <span class="logo-text">MindGuard</span>
+            </div>
+            <p class="tagline">Your Companion in Mental Wellbeing</p>
+        </div>
+
+        <div class="section">
+            <h2>Welcome to MindGuard</h2>
+            <p>Your compassionate companion in mental wellbeing. We're here to support you with personalized care, guidance, and resources.</p>
+          
+            <div class="subscription-plans">
+                <div class="plan-card">
+                    <h3>Free Trial</h3>
+                    <p>3 days of full access to all features</p>
+                    <div class="plan-price">FREE</div>
+                    <button class="btn btn-success" onclick="startTrial()">Start Free Trial</button>
+                </div>
+              
+                <div class="plan-card">
+                    <h3>Monthly Subscription</h3>
+                    <p>Full access to AI companion and features</p>
+                    <div class="plan-price">£10/month</div>
+                    <button class="btn" onclick="subscribe()">Subscribe Now</button>
+                </div>
+              
+                <div class="plan-card">
+                    <h3>Printable Pack Add-on</h3>
+                    <p>Monthly journals, trackers, and worksheets</p>
+                    <div class="plan-price">+£10/month</div>
+                    <button class="btn" onclick="addPrintablePack()">Add Printable Pack</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Emergency Assistance</h2>
+            <p>Your safety is our priority. Immediate help is available when you need it most.</p>
+            <button class="emergency-btn" onclick="showEmergencyModal()">
+                🆘 Emergency Help
+            </button>
+        </div>
+
+        <div class="section">
+            <h2>Getting Started</h2>
+            <p>MindGuard is currently being deployed. Please check back soon for full functionality!</p>
+            <p>Features coming include:</p>
+            <ul>
+                <li>AI-powered mental health support</li>
+                <li>Emergency response system</li>
+                <li>Printable wellness packs</li>
+                <li>Secure subscription management</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function startTrial() {
+            alert('3-day free trial will start after deployment!');
+        }
+      
+        function subscribe() {
+            alert('Subscription will be available after deployment!');
+        }
+      
+        function addPrintablePack() {
+            alert('Printable pack add-on will be available after deployment!');
+        }
+      
+        function showEmergencyModal() {
+            alert('Emergency assistance will be available after deployment. If you need immediate help, please call emergency services.');
+        }
+    </script>
+</body>
+</html>
